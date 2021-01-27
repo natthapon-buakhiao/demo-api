@@ -21,7 +21,7 @@ public class UserLoginController {
     @PostMapping("/login")
     public ResponseEntity<?> userLogin(@RequestBody UserLoginRequestModel requestModel) {
 
-        this.userLoginService.inquiryUser(requestModel);
+        this.userLoginService.userLogin(requestModel);
         return ResponseEntity.ok("login success");
     }
 }

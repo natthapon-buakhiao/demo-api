@@ -18,7 +18,7 @@ public class UserLoginService {
     private final UserLoginRepository userLoginRepository;
 
 
-    public void inquiryUser(UserLoginRequestModel requestModel) {
+    public void userLogin(UserLoginRequestModel requestModel) {
 
         int count = 0;
         User userByUserName = new User();
