@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserLoginRequestModel {
 
-    private Long id;
     private String userName;
     private String password;
 }

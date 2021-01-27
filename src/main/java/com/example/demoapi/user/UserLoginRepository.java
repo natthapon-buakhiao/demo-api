@@ -24,14 +24,12 @@ public class UserLoginRepository {
         try {
 
             String sql = "SELECT * FROM USER \n" +
-                    "WHERE ID = :id \n" +
-                    "   and user_name = :userName \n" +
+                    "WHERE user_name = :userName  \n" +
                     "   and password = :password \n" +
                     "   and lock_user = 'N' ;";
 
             MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
-            parameterSource.addValue("id", requestModel.getId());
             parameterSource.addValue("userName", requestModel.getUserName());
             parameterSource.addValue("password", requestModel.getPassword());
 
@@ -59,13 +57,11 @@ public class UserLoginRepository {
         try {
 
             String sql = "SELECT * FROM USER \n" +
-                    "WHERE ID = :id \n" +
-                    "   and user_name = :userName \n" +
+                    "WHERE user_name = :userName \n" +
                     "   and lock_user = 'N' ;";
 
             MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
-            parameterSource.addValue("id", requestModel.getId());
             parameterSource.addValue("userName", requestModel.getUserName());
 
             return this.namedParameterJdbcTemplate.queryForObject(sql, parameterSource, new RowMapper<Optional<User>>() {

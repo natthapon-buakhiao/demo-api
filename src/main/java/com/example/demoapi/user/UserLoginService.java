@@ -29,17 +29,17 @@ public class UserLoginService {
 
             user = this.userLoginRepository.inquiryUser(requestModel).orElseThrow(() -> new NotFoundException(ErrorCode.ERR_NOT_FOUND.code, "Invalid password"));
 
-            if(userByUserName.getCountInvalid() == 2 && userByUserName.getUserName().equals(user.getUserName())) {
-                this.userLoginRepository.UpdateCountUser(requestModel.getId(),count);
+            if(userByUserName.getCountInvalid() > 0 && userByUserName.getCountInvalid() < 3 && userByUserName.getUserName().equals(user.getUserName())) {
+                this.userLoginRepository.UpdateCountUser(userByUserName.getId(),count);
             }
         } catch (NotFoundException e) {
             if(e.getMessage().equals("Invalid password")) {
                 count = userByUserName.getCountInvalid() +1;
                 if(count == 3) {
-                    this.userLoginRepository.lockUser(requestModel.getId());
+                    this.userLoginRepository.lockUser(userByUserName.getId());
                     throw new NotFoundException("lock user");
                 }
-                this.userLoginRepository.UpdateCountUser(requestModel.getId(),count);
+                this.userLoginRepository.UpdateCountUser(userByUserName.getId(),count);
             }
             log.info("count : {}",userByUserName.getCountInvalid());
 
