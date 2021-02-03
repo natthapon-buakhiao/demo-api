@@ -84,6 +84,38 @@ public class UserLoginRepository {
         }
     }
 
+    public Optional<User> checkUserLock(UserLoginRequestModel requestModel) {
+
+        try {
+
+            String sql = "SELECT * FROM USER \n" +
+                    "WHERE user_name = :userName \n" +
+                    "   and lock_user = 'Y' ;";
+
+            MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+
+            parameterSource.addValue("userName", requestModel.getUserName());
+
+            return this.namedParameterJdbcTemplate.queryForObject(sql, parameterSource, new RowMapper<Optional<User>>() {
+                @Override
+                public Optional<User> mapRow(ResultSet rs, int i) throws SQLException {
+
+                    return Optional.of(User.builder()
+                            .id(rs.getLong("ID"))
+                            .userName(rs.getString("USER_NAME"))
+                            .email(rs.getString("EMAIL"))
+                            .password(rs.getString("PASSWORD"))
+                            .lockUser(rs.getString("LOCK_USER"))
+                            .countInvalid(rs.getInt("COUNT_INVALID"))
+                            .build());
+                }
+            });
+        } catch (EmptyResultDataAccessException e) {
+
+            return Optional.empty();
+        }
+    }
+
     public int UpdateCountUser(Long id,int count){
         StringBuilder sql = new StringBuilder();
 

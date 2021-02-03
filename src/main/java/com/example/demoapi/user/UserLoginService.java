@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -23,6 +25,7 @@ public class UserLoginService {
         int count = 0;
         User userByUserName = new User();
         User user = new User();
+        Optional<User> checkUserLock = Optional.of(new User());
 
         try {
             userByUserName = this.userLoginRepository.inquiryUserByUserName(requestModel).orElseThrow(() -> new NotFoundException(ErrorCode.ERR_NOT_FOUND.code, "user not found"));
@@ -41,7 +44,15 @@ public class UserLoginService {
                 }
                 this.userLoginRepository.UpdateCountUser(userByUserName.getId(),count);
             }
-            log.info("count : {}",userByUserName.getCountInvalid());
+            if(e.getMessage().equals("user not found")) {
+
+                checkUserLock = Optional.ofNullable(this.userLoginRepository.checkUserLock(requestModel).orElseThrow(() -> new NotFoundException(ErrorCode.ERR_NOT_FOUND.code, "user not found")));
+
+                if (checkUserLock.isPresent() && checkUserLock.get().getCountInvalid() == 2 ) {
+                    throw new NotFoundException("User is locked, please contact admin");
+                }
+            }
+            log.info("count : {}",count);
 
             throw new NotFoundException(e.getMessage());
         }
