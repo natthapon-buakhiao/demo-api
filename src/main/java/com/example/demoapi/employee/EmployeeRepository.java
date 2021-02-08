@@ -21,7 +21,6 @@ import java.util.Optional;
 public class EmployeeRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final JdbcTemplate jdbcTemplate;
 
     public Collection<Employee> getEmployee() {
 
@@ -43,20 +42,6 @@ public class EmployeeRepository {
 
     }
 
-    public void insertEmployee(EmployeeRequestModel request) {
-        // Creating map with all required params
-//        String sql = "INSERT INTO TBL_EMPLOYEES (first_name, last_name, email) " +
-//                "VALUES (:firstName, :lastName, :email)";
-//        Map<String, Object> paramMap = new HashMap<String, Object>();
-//
-//        paramMap.put("firstName", request.getFirstName());
-//        paramMap.put("lastName", request.getLastName());
-//        paramMap.put("email", request.getEmil());
-//        // Passing map containing named params
-//        return namedParameterJdbcTemplate.update(sql, paramMap);
-        String sql = "INSERT INTO TBL_EMPLOYEES(first_name, last_name, email) values(?,?,?)";
-        this.jdbcTemplate.update(sql,new Object[]{request.getFirstName(),request.getLastName(),request.getEmail()});
-    }
 
     public int saveEmployee(Employee request) {
 

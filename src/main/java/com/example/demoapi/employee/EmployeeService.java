@@ -7,11 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,59 +33,14 @@ public class EmployeeService {
 
     }
 
-    public ResponseModel insertEmployee(EmployeeRequestModel request) throws Exception {
-
-        log.info("insertEmployeeRequestModel: {}",request);
-
-        try {
-            this.employeeRepository.insertEmployee(request);
-
-
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-//            return ResponseModel.builder()
-//                    .message(e.getMessage())
-//                    .build();
-        }
-
-        return ResponseModel.builder()
-                .code("200")
-                .message("Success")
-                .build();
-    }
     public int saveEmployee(EmployeeDto employeeDto) {
 
         return this.employeeRepository.saveEmployee(modelMapper.map(employeeDto,Employee.class));
     }
 
-//    public ResponseModel updateEmployee(EmployeeRequestUpdateModel request) throws Exception {
-//
-//
-//        log.info("updateEmployeeRequestModel: {}",request);
-//
-//        try {
-//            Optional<Employee> employee = Optional.of(this.employeeRepository.inquiryEmployee(request.getId()))
-//                    .orElseThrow(() -> new Exception("not found"));
-//
-//            if(!employee.isEmpty()) {
-//                this.employeeRepository.updateEmployee(request);
-//            } else {
-//                throw new Exception("not found");
-//            }
-//
-//        } catch (Exception e) {
-//            throw new Exception(e.getMessage());
-//        }
-//
-//        return ResponseModel.builder()
-//                .code("200")
-//                .message("Success")
-//                .build();
-//
-//    }
 
     @Transactional
-    public void updateEmployee(EmployeeDto request) throws Exception {
+    public void updateEmployee(EmployeeDto request) {
 
         log.info("updateEmployeeRequestModel: {}",request);
         if (this.employeeRepository.updateEmployee(modelMapper.map(request, Employee.class)) == 0) {
@@ -96,14 +48,6 @@ public class EmployeeService {
         }
 
     }
-
-  /*  public int updatePatchEmployee(EmployeeDto request) throws Exception {
-
-        log.info("updatePatchEmployeeRequestModel: {}",request);
-        return this.employeeRepository.updateEmployee(request);
-
-
-    }*/
 
     public void deleteEmployee(Long id) {
         log.info("deleteEmployeeRequestModel: {}", id);
